@@ -1,3 +1,4 @@
+import tabJour from './Utilitaire/gestionTemps.js'
 const CleAPI = 'fe41a4daca2ce8de798973408e024747';
 let resultatAPI;
 
@@ -7,6 +8,11 @@ const localisation = document.querySelector('.localisation');
 
 const heure = document.querySelectorAll('.heure_nom_prevision');
 const tempheure = document.querySelectorAll('.heure_prevision_valeur');
+
+const Jour = document.querySelectorAll('.jour_nom_prevision');
+const tempJour = document.querySelectorAll('.jour_prevision_valeur');
+const iconImg = document.querySelector('.logo_meteo');
+const chargementContainer = document.querySelector('.overlay_icon_chargement')
 
 if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(position =>{
@@ -29,7 +35,8 @@ function AppelAPI(long, lat){
        localisation.innerText = resultatAPI.timezone;
 
 
-       let heureActuelle = new Date().getHours();
+    const heureActuelle = new Date().getHours();
+
        for(let i=0; i< heure.length; i++){
            let heureIncr = heureActuelle +i*3
 
@@ -41,10 +48,28 @@ function AppelAPI(long, lat){
                heure[i].innerText = `${heureIncr} h`;
            }
        }
-       
+        //    temperature pour les heures *3
        for(let j=0; j< tempheure.length; j++){
-           tempheure[j].innerText= `${Math.trunc(resultatAPI.hourly[j*3].temp)}°`
+           tempheure[j].innerText= `${Math.trunc(resultatAPI.hourly[(j*3)+3].temp)}°`
        }
-       
+        // jours
+        for(let k = 0; k < tabJour.length; k++ )
+       Jour[k].innerText = tabJour[k].slice(0,3);
+
+
     })
+
+    // for (let m = 0; m < 7; m++) {
+    //     tempJour[m].innerText = `${Math.trunc(resultatAPI.daily[m +1])}°`;
+        
+    // }
+
+    // changement de l'icone
+    // if(heureActuelle >= 6 && heureActuelle < 21){
+    //     iconImg.src = `ressources/jour/${resultatsAPI.current.weather[0].icon}.svg`
+    // }else{
+    //     iconImg.src = `ressources/nuit/${resultatsAPI.current.weather[0].icon}.svg`
+    // }
+
+    chargementContainer.classList.add("disparition");
 }
